@@ -1,0 +1,96 @@
+Ordonner les colonnes dans un ordre différent
+awk -F"|" '{ print $4 "\t" $2 "\t" $3 }' MUQ.Circulation_Item_Inventories.20230625.txt
+
+---
+
+Numéros des champs d'un fichier tabulé
+head -1 file.txt |sed -e 's/\t/\n'/g| nl
+
+---
+
+Ligne contenant "WITHDRAWN" en 19e colonne
+awk '{v="WITHDRAWN"} $19~v {print}' MUQ.Circulation_Item_Inventories.20230702.txt|head
+
+---
+
+Extraire une ou plusieurs chaines de caractères
+perl -lne 'print "$1 $3" if /^([0-9]{9}.*)([0-9]{9} 362[0,1]  L \$\$a)(.*)$/m' file > file2
+
+---
+
+Join sur deux fichiers
+Exemple où le séparateur est un TAB
+join -t "CTRL+V puis TAB" -a1 -a2 -1 2 -2 1 -e 'VIDE' -o 1.1 1.2 1.3 1.4 1.5 1.6 1.7 2.2 liste_ress_elec_restreintes_PEL.txt resselec_pel_restreintes_362 > liste_ress_elec_restreintes_PEL_2.txt
+
+-o Affiche en sortie les champs 1,2,3,4,5,6 et 7 du fichier 1 et le champ 2 du fichier 2
+VIDE si pas de valeur dans le champ
+-a1 et -a2 font en sorte que toutes les valeurs des deux fichiers sont utilisées et affichées
+ils existent d'autres options/flags
+
+---
+
+Chercher une chaîne dans un fichier à une ligne, par exemple, espace chaîne espace
+perl -e 'while(<>) { $i += s/\bchaine\b//g; } print "$i\n"' < test.txt
+
+---
+
+Chercher une chaîne dans plusieurs fichiers, dans tous les sous-répertoires
+find . -exec grep -l "chaine" {} \;
+
+---
+
+Pour comparer deux fichiers
+diff file1 file2
+
+comm -12 file1 file2 > file_same
+comm -23 file1 file2 > file1_only
+comm -13 file1 file2 > file2_only
+
+---
+
+Recherche d'une expression dans le nom de tous les fichiers du répertoire et ses sous-répertoires
+find . -name "*expression*" -print
+
+---
+
+Pour chaque ligne d'une fichier
+Remplace "N/A" par "biblio"
+awk '/regexp/{gsub(/N\/A/, “biblio”)};{print}' file.txt
+
+---
+
+On produit un fichier par chaine de caracteres de la colonne 5.
+Ici, il y a 4 valeurs : CONTAINER, CIRC_MANAGED, FREE_TEXT et VOLUME
+awk -F"|" 'NR==1{ h=$0 }NR>1{ print (!a[$5]++? h ORS $0 : $0) > $5".txt" }' file.txt
+-rw-rw-r-- 1 bibsys  biblio    113244 10 jui 17:07 CONTAINER.txt
+-rw-rw-r-- 1 bibsys  biblio   1967219 10 jui 17:07 CIRC_MANAGED.txt
+-rw-rw-r-- 1 bibsys  biblio     11242 10 jui 17:07 FREE_TEXT.txt
+-rw-rw-r-- 1 bibsys  biblio 736910209 10 jui 17:07 VOLUME.txt
+
+---
+
+Conversion d'un lot de fichiers en utf8
+find . -type f -exec iconv -f iso-8859-1 -t utf-8 "{}" -o /exlibris/aleph/utf_diac/new/"{}" \;
+
+---
+
+Pour trouver les fichiers avec CRLF
+grep -l -E '\r\n' *
+
+---
+
+Pour enlever des lignes vides (dans l'editeur vi)
+:1,$ g/^$/d
+
+---
+
+Numéroter les lignes d'un fichier en vi
+:set nu  
+retirer numerotation
+:set nonu
+
+---
+
+Montrer des caractères spéciaux en vi
+:set list
+
